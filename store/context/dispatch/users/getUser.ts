@@ -6,7 +6,7 @@ import { Dispatch } from "react";
 import { UserAction } from "../../users/actions";
 import { UserActionTypes } from "../../users/types";
 
-export async function getUser(dispatch: Dispatch<UserActionTypes>, client: ApiClient): Promise<void> {
+export async function getUser(dispatch: Dispatch<UserActionTypes>, client: ApiClient): Promise<null | GetUser> {
   try {
     dispatch({ type: UserAction.USER_LOADING_START });
 
@@ -17,7 +17,7 @@ export async function getUser(dispatch: Dispatch<UserActionTypes>, client: ApiCl
         type: UserAction.GET_USER_HTTP_INTERNAL_ERROR,
         payload: new HttpInternalServerError("Get plans failed"),
       });
-      return;
+      return null;
     }
 
     switch (response.status) {
@@ -26,26 +26,28 @@ export async function getUser(dispatch: Dispatch<UserActionTypes>, client: ApiCl
           type: UserAction.GET_USER_SUCCESS,
           payload: response.data as GetUser,
         });
-        break;
+        return response.data;
 
       case HttpStatus.NOT_FOUND:
         dispatch({
           type: UserAction.GET_USER_NOT_FOUND,
           payload: new HttpNotFoundError("Get plans not found"),
         });
-        break;
+        return null;
 
       default:
         dispatch({
           type: UserAction.GET_USER_HTTP_INTERNAL_ERROR,
           payload: new HttpInternalServerError(`Unexpected status: ${response.status}`),
         });
+        return null;
     }
   } catch (error) {
     dispatch({
       type: UserAction.GET_USER_ERROR,
       payload: error instanceof Error ? error : new Error("Get plans failed"),
     });
+    return null;
   } finally {
     dispatch({ type: UserAction.USER_LOADING_END });
   }
