@@ -35,6 +35,7 @@ export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
         if (response === null) {
           attempts++;
           if (attempts === 10) {
+            console.log("******");
             signOut({ redirectUrl: "/sign-in" });
           }
 
