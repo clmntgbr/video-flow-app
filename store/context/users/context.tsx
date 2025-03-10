@@ -34,7 +34,7 @@ export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     const intervalId = setInterval(() => {
       fetchUser();
-    }, 10000);
+    }, 30000);
 
     return () => clearInterval(intervalId);
   }, [apiClient]);

@@ -1,8 +1,13 @@
+import { MediaPod } from "./media-pod";
+
 export interface User {
-  uuid: string;
   email: string;
-  id: string | null;
-  givenName: string | null;
-  familyName: string | null;
-  avatarUrl: string | null;
+  firstName: string;
+  lastName: string;
+  name: string;
+  avatarUrl: string;
+  mediaPods: MediaPod[];
+  createdAt: string;
+  updatedAt: string;
+  uuid: string;
 }
