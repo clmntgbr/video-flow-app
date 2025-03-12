@@ -2,7 +2,6 @@
 
 import { SidebarIcon } from "lucide-react";
 
-import { SearchForm } from "@/components/search-form";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -29,7 +28,6 @@ export function SiteHeader() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <SearchForm className="w-full sm:ml-auto sm:w-auto" />
       </div>
     </header>
   );

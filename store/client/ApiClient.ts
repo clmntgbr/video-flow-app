@@ -32,4 +32,12 @@ export default class ApiClient {
       return null;
     }
   }
+
+  public async getMediaPods(): Promise<AxiosResponse<any> | null> {
+    try {
+      return await this.httpClient.get("/media_pods");
+    } catch {
+      return null;
+    }
+  }
 }

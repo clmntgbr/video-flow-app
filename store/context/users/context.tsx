@@ -29,15 +29,12 @@ export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
     let intervalId: string | number | NodeJS.Timeout | undefined;
     let attempts = 0;
 
-    console.log("ici");
-
     const fetchUser = async () => {
       if (apiClient) {
         const response = await getUser(userDispatch, apiClient);
         if (response === null) {
           attempts++;
           if (attempts === 10) {
-            console.log("******");
             // signOut({ redirectUrl: "/sign-in" });
           }
 

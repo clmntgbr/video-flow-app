@@ -1,9 +1,12 @@
 import React, { PropsWithChildren } from "react";
+import { MediaPodProvider } from "./media-pods";
 import { UserProvider } from "./users";
 
 const AppContextProviders: React.FC<PropsWithChildren> = ({ children }) => (
   <UserProvider>
-    <AppHooksProvider>{children}</AppHooksProvider>
+    <MediaPodProvider>
+      <AppHooksProvider>{children}</AppHooksProvider>
+    </MediaPodProvider>
   </UserProvider>
 );
 

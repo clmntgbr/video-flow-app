@@ -8,8 +8,10 @@ export interface MediaPod {
   finalVideo: Video[];
   configuration: Configuration;
   status: string;
+  frame: string | null;
   statuses: string[];
   createdAt: string;
   updatedAt: string;
+  percent: number;
   uuid: string;
 }
