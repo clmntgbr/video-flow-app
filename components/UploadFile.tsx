@@ -1,7 +1,7 @@
 "use client";
 
+import { Upload } from "lucide-react";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { Button } from "./ui/button";
 
 interface UploadFileProps {
   onUpload: (file: File) => void;
@@ -76,16 +76,9 @@ export const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(({ onUpload
       onDrop={handleDrop}
       onClick={handleZoneClick}
     >
+      <Upload className="absolute inset-0 m-auto opacity-10 w-100 h-100" strokeWidth={0.5} />
       <div className="flex flex-col items-center">
         <div className="text-gray-400 text-center">
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleZoneClick();
-            }}
-          >
-            <span className="p-4">Parcourez vos fichiers</span>
-          </Button>
           <input ref={inputRef} id="image-upload" type="file" accept="video/*" multiple={false} className="hidden" onChange={handleFileChange} />
         </div>
       </div>
