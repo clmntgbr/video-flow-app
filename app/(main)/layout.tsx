@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/components/AppSidebar";
-import { SiteHeader } from "@/components/SiteHeader";
+import { AppSidebar } from "@/components/Sidebar/AppSidebar";
+import { SiteHeader } from "@/components/Sidebar/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppContextProviders } from "@/store/context";
 import { ApiProvider } from "@/store/context/ApiContext";

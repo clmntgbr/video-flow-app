@@ -1,6 +1,5 @@
 "use client";
 
-import { Upload } from "lucide-react";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Button } from "./ui/button";
 
@@ -78,9 +77,7 @@ export const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(({ onUpload
       onClick={handleZoneClick}
     >
       <div className="flex flex-col items-center">
-        <Upload className="mb-6 h-16 w-16" strokeWidth={1.5} />
         <div className="text-gray-400 text-center">
-          <h2 className="mb-4 text-2xl font-semibold text-gray-900">{isDragging ? "Déposez maintenant" : "Déposez votre vidéo ici"}</h2>
           <Button
             onClick={(e) => {
               e.stopPropagation();

@@ -3,10 +3,10 @@
 import { BookOpen, Bot, Command, Frame, LifeBuoy, Map, PieChart, Send, Settings2, SquareTerminal } from "lucide-react";
 import * as React from "react";
 
-import { NavMain } from "@/components/NavMain";
-import { NavProjects } from "@/components/NavProjects";
-import { NavSecondary } from "@/components/NavSecondary";
-import { NavUser } from "@/components/NavUser";
+import { NavMain } from "@/components/Sidebar/NavMain";
+import { NavProjects } from "@/components/Sidebar/NavProjects";
+import { NavSecondary } from "@/components/Sidebar/NavSecondary";
+import { NavUser } from "@/components/Sidebar/NavUser";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import useUserContext from "@/store/context/users/hooks";
 
@@ -156,9 +156,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={user.me} />
-      </SidebarFooter>
+      <SidebarFooter>{user.me && <NavUser user={user.me} />}</SidebarFooter>
     </Sidebar>
   );
 }
