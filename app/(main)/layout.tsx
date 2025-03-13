@@ -28,7 +28,7 @@ export default async function RootLayout({
             <div className="flex flex-1">
               <AppSidebar />
               <SidebarInset>
-                <main className="container mx-auto px-4 py-4">{children}</main>
+                <main className="px-4 py-4">{children}</main>
               </SidebarInset>
             </div>
           </SidebarProvider>

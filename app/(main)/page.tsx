@@ -2,23 +2,30 @@
 
 import { UploadFile } from "@/components/UploadFile";
 import VideoConfiguration from "@/components/VideoConfiguration";
-import useMediaPodContext from "@/store/context/media-pods/hooks";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Page() {
-  const { mediaPod } = useMediaPodContext();
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const uploadRef = useRef<{ resetInput: () => void } | null>(null);
 
   const handleUploadClick = (file: File) => {
     setFile(file);
     setIsOpen(true);
   };
 
+  const handleOnClose = () => {
+    setFile(null);
+    setIsOpen(false);
+    if (uploadRef.current) {
+      uploadRef.current.resetInput();
+    }
+  };
+
   return (
     <>
-      <UploadFile onUpload={handleUploadClick} />
-      <VideoConfiguration isOpen={isOpen} onClose={() => setIsOpen(false)} video={file} />
+      <UploadFile onUpload={handleUploadClick} ref={uploadRef} />
+      <VideoConfiguration isOpen={isOpen} onClose={handleOnClose} video={file} />
     </>
   );
 }

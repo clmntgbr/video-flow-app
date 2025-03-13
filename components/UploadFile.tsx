@@ -1,13 +1,29 @@
 "use client";
 
 import { Upload } from "lucide-react";
+import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Button } from "./ui/button";
 
 interface UploadFileProps {
   onUpload: (file: File) => void;
 }
 
-export function UploadFile({ onUpload }: UploadFileProps) {
+export interface UploadFileRef {
+  resetInput: () => void;
+}
+
+export const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(({ onUpload }, ref) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    resetInput: () => {
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
+    },
+  }));
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -15,22 +31,67 @@ export function UploadFile({ onUpload }: UploadFileProps) {
     }
   };
 
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith("video/")) {
+        onUpload(file);
+      }
+    }
+  };
+
+  const handleZoneClick = () => {
+    inputRef.current?.click();
+  };
+
   return (
-    <div className="relative mb-8 rounded-lg border border-dashed p-40 text-center transition-all bg-sidebar">
+    <div
+      className={`relative rounded-lg border items-center hover:bg-slate-100 hover:border-blue-500 border-dashed text-center transition-all w-full h-[70vh] ${
+        isDragging ? "bg-slate-100 border-blue-500" : "bg-sidebar"
+      } cursor-pointer flex flex-col justify-center items-center`}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      onClick={handleZoneClick}
+    >
       <div className="flex flex-col items-center">
-        <Upload className="mb-6 h-30 w-30" strokeWidth={1.5} />
-        <div className="text-gray-400">
-          <h2 className="mb-4 text-2xl font-semibold text-gray-900">Déposez votre vidéo ici</h2>
-          <Button>
-            <label htmlFor="image-upload" className="cursor-pointer p-4">
-              Parcourez vos fichiers
-            </label>
+        <Upload className="mb-6 h-16 w-16" strokeWidth={1.5} />
+        <div className="text-gray-400 text-center">
+          <h2 className="mb-4 text-2xl font-semibold text-gray-900">{isDragging ? "Déposez maintenant" : "Déposez votre vidéo ici"}</h2>
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleZoneClick();
+            }}
+          >
+            <span className="p-4">Parcourez vos fichiers</span>
           </Button>
-          <label className="cursor-pointer text-black hover:text-black">
-            <input id="image-upload" type="file" accept="video/*" multiple className="hidden" onChange={handleFileChange} />
-          </label>
+          <input ref={inputRef} id="image-upload" type="file" accept="video/*" multiple={false} className="hidden" onChange={handleFileChange} />
         </div>
       </div>
     </div>
   );
-}
+});
