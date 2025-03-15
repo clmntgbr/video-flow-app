@@ -40,4 +40,12 @@ export default class ApiClient {
       return null;
     }
   }
+
+  public async getRecentsMediaPods(): Promise<AxiosResponse<any> | null> {
+    try {
+      return await this.httpClient.get("/media_pods?pagination=false&itemsPerPage=10");
+    } catch {
+      return null;
+    }
+  }
 }

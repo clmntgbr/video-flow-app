@@ -1,5 +1,6 @@
 "use client";
 
+import { DataTableDemo } from "@/components/Table";
 import { UploadFile } from "@/components/UploadFile";
 import VideoConfiguration from "@/components/VideoConfiguration";
 import { useRef, useState } from "react";
@@ -26,6 +27,7 @@ export default function Page() {
     <>
       <UploadFile onUpload={handleUploadClick} ref={uploadRef} />
       <VideoConfiguration isOpen={isOpen} onClose={handleOnClose} video={file} />
+      <DataTableDemo />
     </>
   );
 }

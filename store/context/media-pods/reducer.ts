@@ -5,13 +5,15 @@ import { MediaPodActionTypes } from "./types";
 export type MediaPodState = {
   error: boolean;
   loading: boolean;
-  mediaPods: GetMediaPods | [];
+  all: GetMediaPods | [];
+  recents: GetMediaPods | [];
 };
 
 export const initialMediaPodState: MediaPodState = {
   error: false,
   loading: true,
-  mediaPods: [],
+  all: [],
+  recents: [],
 };
 
 export function mediaPodReducer(state: MediaPodState, action: MediaPodActionTypes): MediaPodState {
@@ -34,7 +36,14 @@ export function mediaPodReducer(state: MediaPodState, action: MediaPodActionType
     case MediaPodAction.GET_MEDIA_PODS_SUCCESS: {
       return {
         ...state,
-        mediaPods: action.payload,
+        all: action.payload,
+      };
+    }
+
+    case MediaPodAction.GET_RECENTS_MEDIA_PODS_SUCCESS: {
+      return {
+        ...state,
+        recents: action.payload,
       };
     }
 
@@ -44,7 +53,7 @@ export function mediaPodReducer(state: MediaPodState, action: MediaPodActionType
       return {
         ...state,
         error: true,
-        mediaPods: [],
+        all: [],
       };
     }
 
