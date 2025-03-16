@@ -67,16 +67,16 @@ export const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(({ onUpload
 
   return (
     <div
-      className={`relative rounded-lg border items-center hover:bg-slate-100 border-dashed text-center transition-all w-full h-[70vh] ${
-        isDragging ? "bg-slate-100 border-blue-500" : "bg-sidebar"
-      } cursor-pointer flex flex-col justify-center items-center`}
+      className={`relative rounded-lg border border-dashed text-center transition-all w-full h-[70vh] 
+    cursor-pointer flex flex-col justify-center items-center group
+    ${isDragging ? "bg-slate-100 border-blue-500" : "bg-sidebar"}`}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onClick={handleZoneClick}
     >
-      <Upload className="absolute inset-0 m-auto opacity-10 w-100 h-100" strokeWidth={0.5} />
+      <Upload className="absolute inset-0 m-auto w-100 h-100 transition-colors text-gray-300 group-hover:text-blue-100" strokeWidth={0.5} />
       <div className="flex flex-col items-center">
         <div className="text-gray-400 text-center">
           <input ref={inputRef} id="image-upload" type="file" accept="video/*" multiple={false} className="hidden" onChange={handleFileChange} />

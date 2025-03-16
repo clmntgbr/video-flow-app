@@ -11,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import useMediaPodContext from "@/store/context/media-pods/hooks";
 import { MediaPod } from "@/store/interface/media-pod";
 import { Tag } from "@/store/interface/tag";
@@ -110,9 +110,6 @@ function getNameByStatus(status: string) {
 const columns: ColumnDef<MediaPod>[] = [
   {
     accessorKey: "frame",
-    header: ({ column }) => {
-      return <></>;
-    },
     cell: ({ row }) => {
       const frame: string = row.getValue("frame");
       return (
@@ -124,9 +121,6 @@ const columns: ColumnDef<MediaPod>[] = [
   },
   {
     accessorKey: "originalVideo",
-    header: () => {
-      return "Name";
-    },
     cell: ({ row }) => {
       const video: Video = row.getValue("originalVideo");
       return <span>{video.originalName}</span>;
@@ -134,9 +128,6 @@ const columns: ColumnDef<MediaPod>[] = [
   },
   {
     accessorKey: "tag",
-    header: () => {
-      return <></>;
-    },
     cell: ({ row }) => {
       const tags: Tag[] = row.getValue("tag");
       return (
@@ -152,14 +143,6 @@ const columns: ColumnDef<MediaPod>[] = [
   },
   {
     accessorKey: "status",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Status
-          <ArrowUpDown />
-        </Button>
-      );
-    },
     cell: ({ row }) => (
       <div className="flex items-center gap-2">
         <div className={`w-2 h-2 rounded-full ${getColorByStatus(row.getValue("status"))}`} />
@@ -169,17 +152,8 @@ const columns: ColumnDef<MediaPod>[] = [
   },
   {
     accessorKey: "percent",
-    header: ({ column }) => {
-      return (
-        <div className="min-w-36">
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-            <ArrowUpDown />
-          </Button>
-        </div>
-      );
-    },
     cell: ({ row }) => (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 min-w-30">
         <Progress value={row.getValue("percent")} getValueLabel={row.getValue("percent")} max={100} />
         {row.getValue("percent")}%
       </div>
@@ -242,19 +216,6 @@ export function RecentsMediaPods() {
     <div className="container mx-auto mt-4">
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (

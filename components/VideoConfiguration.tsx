@@ -68,21 +68,19 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
   return (
     <>
       <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()} key={"top"}>
-        <SheetContent side={"left"} className="h-full w-[70%] sm:w-[70%] sm:max-w-[70%]">
+        <SheetContent side={"left"} className="h-full w-[70%] sm:w-[70%] sm:max-w-[70%] gap-0">
           <SheetHeader>
-            <SheetTitle>Edit profile</SheetTitle>
-            <SheetDescription>Make changes to your profile here. Click save when you're done.</SheetDescription>
+            <SheetTitle>Edit your video</SheetTitle>
+            <SheetDescription>Make changes to your video here.</SheetDescription>
           </SheetHeader>
-          <div className="grid gap-4 py-4">
-            <video ref={videoRef} src={videoSrc || undefined} className="hidden" onLoadedMetadata={handleVideoLoad} onTimeUpdate={handleTimeUpdate} />
-            <canvas ref={canvasRef} className="hidden" />
+          <video ref={videoRef} src={videoSrc || undefined} className="hidden" onLoadedMetadata={handleVideoLoad} onTimeUpdate={handleTimeUpdate} />
+          <canvas ref={canvasRef} className="hidden" />
 
-            {thumbnail && (
-              <div>
-                <img src={thumbnail} alt="Aperçu de la vidéo" className="max-w-full max-h-64 rounded-md shadow-md" />
-              </div>
-            )}
-          </div>
+          {thumbnail && (
+            <div>
+              <img src={thumbnail} alt="Aperçu de la vidéo" className="max-w-full max-h-64 rounded-md shadow-md" />
+            </div>
+          )}
           <SheetFooter>
             <SheetClose asChild>
               <Button type="submit">Save changes</Button>

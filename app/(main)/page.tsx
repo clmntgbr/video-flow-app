@@ -1,6 +1,6 @@
 "use client";
 
-import { RecentsMediaPods } from "@/components/Table";
+import { RecentsMediaPods } from "@/components/RecentsMediaPods";
 import { UploadFile } from "@/components/UploadFile";
 import VideoConfiguration from "@/components/VideoConfiguration";
 import { useRef, useState } from "react";
