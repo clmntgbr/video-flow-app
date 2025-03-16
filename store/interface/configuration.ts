@@ -4,12 +4,13 @@ export interface Configuration {
   subtitleColor: string;
   subtitleBold: string;
   subtitleItalic: string;
+
   subtitleUnderline: string;
   subtitleOutlineColor: string;
   subtitleOutlineThickness: string;
   subtitleShadow: string;
   subtitleShadowColor: string;
+
   format: string;
   split: string;
-  uuid: string;
 }

@@ -5,9 +5,7 @@ export default class ApiClient {
   private httpClient: AxiosInstance;
 
   constructor(token?: string | null) {
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-    };
+    const headers: Record<string, string> = {};
 
     if (token) {
       headers.Authorization = `Bearer ${token}`;
@@ -44,6 +42,22 @@ export default class ApiClient {
   public async getRecentsMediaPods(): Promise<AxiosResponse<any> | null> {
     try {
       return await this.httpClient.get("/media_pods?pagination=false&itemsPerPage=10");
+    } catch {
+      return null;
+    }
+  }
+
+  public async getConfiguration(): Promise<AxiosResponse<any> | null> {
+    try {
+      return await this.httpClient.get("/configuration");
+    } catch {
+      return null;
+    }
+  }
+
+  public async postUploadVideo(payload: FormData): Promise<AxiosResponse<any> | null> {
+    try {
+      return await this.httpClient.post("/media-pods/video/upload", payload);
     } catch {
       return null;
     }
