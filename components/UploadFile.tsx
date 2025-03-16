@@ -67,7 +67,7 @@ export const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(({ onUpload
 
   return (
     <div
-      className={`relative rounded-lg border items-center hover:bg-slate-100 hover:border-blue-500 border-dashed text-center transition-all w-full h-[70vh] ${
+      className={`relative rounded-lg border items-center hover:bg-slate-100 border-dashed text-center transition-all w-full h-[70vh] ${
         isDragging ? "bg-slate-100 border-blue-500" : "bg-sidebar"
       } cursor-pointer flex flex-col justify-center items-center`}
       onDragEnter={handleDragEnter}

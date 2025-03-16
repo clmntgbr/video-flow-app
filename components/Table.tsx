@@ -33,10 +33,80 @@ import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
 
 function getColorByStatus(status: string) {
-  if (status.includes("VIDEO_INCRUSTATOR_COMPLETE")) return "bg-green-500";
+  if (status.includes("VIDEO_READY")) return "bg-green-500";
   if (status.includes("_ERROR")) return "bg-red-500";
   return "bg-orange-500";
 }
+
+function getNameByStatus(status: string) {
+  switch (status) {
+    case "UPLOAD_COMPLETE":
+      return "Upload completed";
+
+    case "SOUND_EXTRACTOR_PENDING":
+      return "Sound extraction in progress";
+    case "SOUND_EXTRACTOR_COMPLETE":
+      return "Sound extraction completed";
+    case "SOUND_EXTRACTOR_ERROR":
+      return "Sound extraction error";
+
+    case "SUBTITLE_GENERATOR_PENDING":
+      return "Subtitle generation in progress";
+    case "SUBTITLE_GENERATOR_COMPLETE":
+      return "Subtitle generation completed";
+    case "SUBTITLE_GENERATOR_ERROR":
+      return "Subtitle generation error";
+
+    case "SUBTITLE_MERGER_PENDING":
+      return "Subtitle merging in progress";
+    case "SUBTITLE_MERGER_COMPLETE":
+      return "Subtitle merging completed";
+    case "SUBTITLE_MERGER_ERROR":
+      return "Subtitle merging error";
+
+    case "SUBTITLE_TRANSFORMER_PENDING":
+      return "Subtitle transformation in progress";
+    case "SUBTITLE_TRANSFORMER_COMPLETE":
+      return "Subtitle transformation completed";
+    case "SUBTITLE_TRANSFORMER_ERROR":
+      return "Subtitle transformation error";
+
+    case "SUBTITLE_INCRUSTATOR_PENDING":
+      return "Subtitle embedding in progress";
+    case "SUBTITLE_INCRUSTATOR_COMPLETE":
+      return "Subtitle embedding completed";
+    case "SUBTITLE_INCRUSTATOR_ERROR":
+      return "Subtitle embedding error";
+
+    case "VIDEO_FORMATTER_PENDING":
+      return "Video formatting in progress";
+    case "VIDEO_FORMATTER_COMPLETE":
+      return "Video formatting completed";
+    case "VIDEO_FORMATTER_ERROR":
+      return "Video formatting error";
+
+    case "VIDEO_SPLITTER_PENDING":
+      return "Video splitting in progress";
+    case "VIDEO_SPLITTER_COMPLETE":
+      return "Video splitting completed";
+    case "VIDEO_SPLITTER_ERROR":
+      return "Video splitting error";
+
+    case "VIDEO_INCRUSTATOR_PENDING":
+      return "Video embedding in progress";
+    case "VIDEO_INCRUSTATOR_COMPLETE":
+      return "Video embedding completed";
+    case "VIDEO_INCRUSTATOR_ERROR":
+      return "Video embedding error";
+
+    case "VIDEO_READY":
+      return "Video ready";
+
+    default:
+      return "Unknown status";
+  }
+}
+
 const columns: ColumnDef<MediaPod>[] = [
   {
     accessorKey: "frame",
@@ -90,31 +160,30 @@ const columns: ColumnDef<MediaPod>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <Badge className={getColorByStatus(row.getValue("status"))}>{row.getValue("status")}</Badge>,
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <div className={`w-2 h-2 rounded-full ${getColorByStatus(row.getValue("status"))}`} />
+        {getNameByStatus(row.getValue("status"))}
+      </div>
+    ),
   },
   {
     accessorKey: "percent",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Pourcentage
-          <ArrowUpDown />
-        </Button>
+        <div className="min-w-36">
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+            <ArrowUpDown />
+          </Button>
+        </div>
       );
     },
-    cell: ({ row }) => <Progress value={row.getValue("percent")} />,
-  },
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Created at
-          <ArrowUpDown />
-        </Button>
-      );
-    },
-    cell: ({ row }) => row.getValue("createdAt"),
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <Progress value={row.getValue("percent")} getValueLabel={row.getValue("percent")} max={100} />
+        {row.getValue("percent")}%
+      </div>
+    ),
   },
   {
     id: "actions",
@@ -143,7 +212,7 @@ const columns: ColumnDef<MediaPod>[] = [
   },
 ];
 
-export function DataTableDemo() {
+export function RecentsMediaPods() {
   const { mediaPod } = useMediaPodContext();
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
