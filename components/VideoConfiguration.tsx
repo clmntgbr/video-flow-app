@@ -32,6 +32,12 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
   const apiClient = useApiClient();
 
   useEffect(() => {
+    setSettings(configuration.configuration);
+  }, [configuration.configuration]);
+
+  console.log(configuration.configuration);
+
+  useEffect(() => {
     if (video && video !== processedVideoRef.current) {
       setThumbnail(null);
       const videoURL = URL.createObjectURL(video);
@@ -79,6 +85,7 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
 
   const handleSettingChange = (key: keyof Configuration, value: any) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
+    console.log(settings);
   };
 
   const handleOnSubmit = (e: MouseEvent<HTMLButtonElement>) => {
@@ -169,6 +176,43 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                   </div>
 
                   <div className="space-y-2">
+                    <Label>Subtitle shadow</Label>
+                    <Select defaultValue={settings.subtitleShadow} onValueChange={(value) => handleSettingChange("subtitleShadow", value)}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="0">None</SelectItem>
+                          <SelectItem value="1">Soft</SelectItem>
+                          <SelectItem value="2">Medium</SelectItem>
+                          <SelectItem value="3">Hard</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Subtitle outline thickness</Label>
+                    <Select
+                      defaultValue={settings.subtitleOutlineThickness}
+                      onValueChange={(value) => handleSettingChange("subtitleOutlineThickness", value)}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="0">None</SelectItem>
+                          <SelectItem value="1">Soft</SelectItem>
+                          <SelectItem value="2">Medium</SelectItem>
+                          <SelectItem value="3">Hard</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="fontSize">Font size</Label>
                       <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
@@ -183,6 +227,24 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                       step={1}
                       className="w-[60%]"
                       onValueChange={(value) => handleSettingChange("subtitleSize", value[0])}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="fontSize">Split</Label>
+                      <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
+                        {settings.split}
+                      </span>
+                    </div>
+                    <Slider
+                      id="fontSize"
+                      defaultValue={[Number(settings.split)]}
+                      min={1}
+                      max={50}
+                      step={1}
+                      className="w-[60%]"
+                      onValueChange={(value) => handleSettingChange("split", value[0])}
                     />
                   </div>
 
@@ -244,37 +306,9 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                         className="w-full h-10 rounded-lg cursor-pointer"
                       />
                     </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Épaisseur du contour</label>
-                      <select
-                        value={settings.subtitleOutlineThickness}
-                        onChange={(e) => handleSettingChange("subtitleOutlineThickness", e.target.value)}
-                        className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                      >
-                        <option value="OUTLINE_NONE">Aucun</option>
-                        <option value="OUTLINE_SOFT">Fin</option>
-                        <option value="OUTLINE_MEDIUM">Moyen</option>
-                        <option value="OUTLINE_HARD">Épais</option>
-                      </select>
-                    </div>
                   </div>
 
                   <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Ombre</label>
-                      <select
-                        value={settings.subtitleShadow}
-                        onChange={(e) => handleSettingChange("subtitleShadow", e.target.value)}
-                        className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                      >
-                        <option value="SHADOW_NONE">Aucune</option>
-                        <option value="SHADOW_SOFT">Légère</option>
-                        <option value="SHADOW_MEDIUM">Moyenne</option>
-                        <option value="SHADOW_HARD">Forte</option>
-                      </select>
-                    </div>
-
                     {settings.subtitleShadow !== "SHADOW_NONE" && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Couleur de l'ombre</label>
@@ -286,32 +320,6 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                         />
                       </div>
                     )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">Format</label>
-                    <select
-                      value={settings.format}
-                      onChange={(e) => handleSettingChange("format", e.target.value)}
-                      className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    >
-                      <option value="ORIGINAL">Original</option>
-                      <option value="ZOOMED_916">Zoom 9:16</option>
-                      <option value="NORMAL_916_WITH_BORDERS">Normal 9:16 avec bordures</option>
-                      <option value="DUPLICATED_BLURRED_916">Dupliqué et flouté 9:16</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">Nombre de vidéos</label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="10"
-                      value={settings.split}
-                      onChange={(e) => handleSettingChange("split", parseInt(e.target.value))}
-                      className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    />
                   </div>
                 </div>
               </div>

@@ -36,30 +36,28 @@ export function SubtitlePreview({ settings, thumbnail }: SubtitlePreviewProps) {
   };
 
   const getShadow = () => {
-    if (settings.subtitleShadow === "SHADOW_NONE") return "none";
+    if (settings.subtitleShadow === "0") return "none";
     const shadowSize =
       {
-        SHADOW_SOFT: "2px",
-        SHADOW_MEDIUM: "4px",
-        SHADOW_HARD: "6px",
+        "1": "2px",
+        "2": "4px",
+        "3": "6px",
       }[settings.subtitleShadow] || "4px";
 
     return `0 0 ${shadowSize} ${settings.subtitleShadowColor}`;
   };
 
   const getOutline = () => {
-    if (settings.subtitleOutlineThickness === "OUTLINE_NONE") return "none";
+    if (settings.subtitleOutlineThickness === "0") return "none";
     const thickness =
       {
-        OUTLINE_SOFT: "1px",
-        OUTLINE_MEDIUM: "2px",
-        OUTLINE_HARD: "3px",
+        "1": "1px",
+        "2": "2px",
+        "3": "3px",
       }[settings.subtitleOutlineThickness] || "2px";
 
     return `${thickness} ${settings.subtitleOutlineColor}`;
   };
-
-  console.log(settings);
 
   return (
     <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-900">
@@ -67,8 +65,8 @@ export function SubtitlePreview({ settings, thumbnail }: SubtitlePreviewProps) {
       <div
         className="absolute bottom-8 left-0 right-0 text-center px-4"
         style={{
-          fontFamily: getFontFamily(),
-          fontSize: getFontSize(),
+          fontFamily: settings.subtitleFont,
+          fontSize: settings.subtitleSize + "px",
           color: settings.subtitleColor,
           fontWeight: settings.subtitleBold === "1" ? "bold" : "normal",
           fontStyle: settings.subtitleItalic === "1" ? "italic" : "normal",
