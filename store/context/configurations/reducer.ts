@@ -13,7 +13,7 @@ export const initialConfigurationState: ConfigurationState = {
   loading: true,
   configuration: {
     subtitleFont: "ARIAL",
-    subtitleSize: "medium",
+    subtitleSize: "16",
     subtitleColor: "#FFFFFF",
     subtitleBold: "0",
     subtitleItalic: "0",

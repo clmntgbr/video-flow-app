@@ -8,7 +8,11 @@ import { Configuration } from "@/store/interface/configuration";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { SubtitlePreview } from "./SubtitlePreview";
 import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "./ui/sheet";
+import { Slider } from "./ui/slider";
 
 interface VideoConfigurationProps {
   isOpen?: boolean;
@@ -125,36 +129,97 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
 
           <div className="flex-1 overflow-hidden">
             <div className="h-full flex flex-col lg:flex-row">
-              <div className="lg:w-2/3 px-6">
+              <div className="lg:w-2/5 px-6">
                 <div className="h-full flex flex-col">{thumbnail && <SubtitlePreview settings={settings} thumbnail={thumbnail} />}</div>
               </div>
 
-              <div className="lg:w-1/3">
-                <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-8rem)]">
+              <div className="lg:w-3/5">
+                <div className="px-6 space-y-6 overflow-y-auto max-h-[calc(90vh-8rem)]">
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">Police</label>
-                    <select
-                      value={settings.subtitleFont}
-                      onChange={(e) => handleSettingChange("subtitleFont", e.target.value)}
-                      className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    >
-                      <option value="ARIAL">Arial</option>
-                      <option value="TIMES_NEW_ROMAN">Times New Roman</option>
-                      <option value="COURIER_NEW">Courier New</option>
-                    </select>
+                    <Label>Police</Label>
+                    <Select defaultValue={settings.subtitleFont} onValueChange={(value) => handleSettingChange("subtitleFont", value)}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="ARIAL">Arial</SelectItem>
+                          <SelectItem value="TIMES_NEW_ROMAN">Times New Roman</SelectItem>
+                          <SelectItem value="COURIER_NEW">Courier New</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">Taille</label>
-                    <select
-                      value={settings.subtitleSize}
-                      onChange={(e) => handleSettingChange("subtitleSize", e.target.value)}
-                      className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    >
-                      <option value="small">Petit</option>
-                      <option value="medium">Moyen</option>
-                      <option value="large">Grand</option>
-                    </select>
+                    <Label>Format</Label>
+                    <Select defaultValue={settings.format} onValueChange={(value) => handleSettingChange("format", value)}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="ORIGINAL">Original</SelectItem>
+                          <SelectItem value="ZOOMED_916">Zoomed in 9:16</SelectItem>
+                          <SelectItem value="NORMAL_916_WITH_BORDERS">Normal with borders in 9:16</SelectItem>
+                          <SelectItem value="DUPLICATED_BLURRED_916">Duplicated blurred in 9:16</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="fontSize">Font size</Label>
+                      <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
+                        {settings.subtitleSize}
+                      </span>
+                    </div>
+                    <Slider
+                      id="fontSize"
+                      defaultValue={[Number(settings.subtitleSize)]}
+                      min={0}
+                      max={100}
+                      step={1}
+                      className="w-[60%]"
+                      onValueChange={(value) => handleSettingChange("subtitleSize", value[0])}
+                    />
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="bold"
+                        defaultChecked={settings.subtitleBold == "1" ? true : false}
+                        onCheckedChange={(value) => handleSettingChange("subtitleBold", value ? "1" : "0")}
+                      />
+                      <label htmlFor="bold" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Bold
+                      </label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="italic"
+                        defaultChecked={settings.subtitleItalic == "1" ? true : false}
+                        onCheckedChange={(value) => handleSettingChange("subtitleItalic", value ? "1" : "0")}
+                      />
+                      <label htmlFor="italic" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Italic
+                      </label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="underline"
+                        defaultChecked={settings.subtitleUnderline == "1" ? true : false}
+                        onCheckedChange={(value) => handleSettingChange("subtitleUnderline", value ? "1" : "0")}
+                      />
+                      <label
+                        htmlFor="underline"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        Underline
+                      </label>
+                    </div>
                   </div>
 
                   <div className="space-y-4">
@@ -166,36 +231,6 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                         onChange={(e) => handleSettingChange("subtitleColor", e.target.value)}
                         className="w-full h-10 rounded-lg cursor-pointer"
                       />
-                    </div>
-
-                    <div className="flex flex-wrap gap-4">
-                      <label className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          checked={settings.subtitleBold == "1" ? true : false}
-                          onChange={(e) => handleSettingChange("subtitleBold", e.target.checked ? "1" : "0")}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-700">Gras</span>
-                      </label>
-                      <label className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          checked={settings.subtitleItalic == "1" ? true : false}
-                          onChange={(e) => handleSettingChange("subtitleItalic", e.target.checked ? "1" : "0")}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-700">Italique</span>
-                      </label>
-                      <label className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          checked={settings.subtitleUnderline == "1" ? true : false}
-                          onChange={(e) => handleSettingChange("subtitleUnderline", e.target.checked ? "1" : "0")}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-700">Souligné</span>
-                      </label>
                     </div>
                   </div>
 
