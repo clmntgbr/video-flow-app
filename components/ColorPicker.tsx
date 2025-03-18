@@ -94,9 +94,9 @@ function Picker({ color, setColor }: { color: string; setColor: (color: string) 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant={"outline"}>
+        <Button variant={"outline"} className="w-full">
           {color ? <div className="h-4 w-4 rounded !bg-center !bg-cover border transition-all" style={{ background: color }}></div> : <></>}
-          <div className="truncate flex-1">{color}</div>
+          <div className="truncate flex-1 text-left">{color}</div>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-64">

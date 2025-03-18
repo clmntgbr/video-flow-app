@@ -62,24 +62,24 @@ export function SubtitlePreview({ settings, thumbnail }: SubtitlePreviewProps) {
   };
 
   return (
-    <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-900">
-      <img src={thumbnail} alt="Aperçu" className="w-full h-full object-cover" />
-      <div
-        className="absolute bottom-8 left-0 right-0 text-center px-4"
-        style={{
-          fontFamily: getFontFamily(),
-          fontSize: settings.subtitleSize + "px",
-          color: settings.subtitleColor,
-          fontWeight: settings.subtitleBold === "1" ? "bold" : "normal",
-          fontStyle: settings.subtitleItalic === "1" ? "italic" : "normal",
-          textDecoration: settings.subtitleUnderline === "1" ? "underline" : "none",
-          textShadow: getShadow(),
-          WebkitTextStroke: getOutline(),
-        }}
-      >
-        Exemple de sous-titre avec
-        <br />
-        la configuration actuelle
+    <div className="flex justify-center items-center w-full">
+      <div className="relative h-full aspect-video rounded-lg overflow-hidden bg-gray-900">
+        <img src={thumbnail} alt="Aperçu" className="w-full h-full object-cover" />
+        <div
+          className="absolute bottom-8 left-0 right-0 text-center px-4"
+          style={{
+            fontFamily: getFontFamily(),
+            fontSize: settings.subtitleSize + "px",
+            color: settings.subtitleColor,
+            fontWeight: settings.subtitleBold === "1" ? "bold" : "normal",
+            fontStyle: settings.subtitleItalic === "1" ? "italic" : "normal",
+            textDecoration: settings.subtitleUnderline === "1" ? "underline" : "none",
+            textShadow: getShadow(),
+            WebkitTextStroke: getOutline(),
+          }}
+        >
+          Exemple de sous-titre avec <br /> la configuration actuelle
+        </div>
       </div>
     </div>
   );
