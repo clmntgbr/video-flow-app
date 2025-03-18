@@ -1,8 +1,8 @@
 "use client";
 import { useApiClient } from "@/store/context/ApiContext";
 import useConfigurationContext from "@/store/context/configurations/hooks";
-import useMediaPodContext from "@/store/context/media-pods/hooks";
 import { Configuration } from "@/store/interface/configuration";
+import { Loader } from "lucide-react";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { ColorPicker } from "./ColorPicker";
 import { SubtitlePreview } from "./SubtitlePreview";
@@ -25,9 +25,9 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const processedVideoRef = useRef<File | null>(null);
-  const { mediaPodDispatch } = useMediaPodContext();
-  const { configuration, configurationDispatch } = useConfigurationContext();
+  const { configuration } = useConfigurationContext();
   const [settings, setSettings] = useState<Configuration>(configuration.configuration);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const apiClient = useApiClient();
 
@@ -36,6 +36,13 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
       setSettings(configuration.configuration);
     }
   }, [configuration.loading, configuration.configuration]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setSettings(configuration.configuration);
+      setLoading(false);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (video && video !== processedVideoRef.current) {
@@ -108,6 +115,8 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
       return;
     }
 
+    setLoading(true);
+
     const formData = new FormData();
 
     formData.append("video", processedVideoRef.current);
@@ -137,8 +146,8 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <DialogContent className="sm:max-w-[1200px]">
+      <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()} modal={true}>
+        <DialogContent className="sm:max-w-[1200px] min-h-[600px]">
           <DialogHeader>
             <DialogTitle>Edit your video</DialogTitle>
             <DialogDescription>Make changes to your video here.</DialogDescription>
@@ -152,11 +161,40 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
               {thumbnail && <SubtitlePreview settings={settings} thumbnail={thumbnail} />}
             </div>
 
-            <div className="w-2/5 space-y-6 overflow-y-auto max-h-[calc(60vh-8rem)] px-4">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="w-2/5 space-y-6 overflow-y-auto max-h-[calc(60vh-8rem)] px-4 py-2">
+              <div className="flex items-center space-x-4">
+                <Checkbox
+                  id="bold"
+                  disabled={loading}
+                  defaultChecked={settings.subtitleBold == "1"}
+                  onCheckedChange={(value) => handleSettingChange("subtitleBold", value ? "1" : "0")}
+                />
+                <Label htmlFor="bold">Bold</Label>
+
+                <Checkbox
+                  id="italic"
+                  disabled={loading}
+                  defaultChecked={settings.subtitleItalic == "1"}
+                  onCheckedChange={(value) => handleSettingChange("subtitleItalic", value ? "1" : "0")}
+                />
+                <Label htmlFor="italic">Italic</Label>
+
+                <Checkbox
+                  id="underline"
+                  disabled={loading}
+                  defaultChecked={settings.subtitleUnderline == "1"}
+                  onCheckedChange={(value) => handleSettingChange("subtitleUnderline", value ? "1" : "0")}
+                />
+                <Label htmlFor="underline">Underline</Label>
+              </div>
+              <div className="grid grid-cols-2 gap-y-5 gap-x-4">
                 <div className="space-y-2">
                   <Label>Police</Label>
-                  <Select defaultValue={settings.subtitleFont} onValueChange={(value) => handleSettingChange("subtitleFont", value)}>
+                  <Select
+                    disabled={loading}
+                    defaultValue={settings.subtitleFont}
+                    onValueChange={(value) => handleSettingChange("subtitleFont", value)}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
@@ -172,7 +210,7 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
 
                 <div className="space-y-2">
                   <Label>Format</Label>
-                  <Select defaultValue={settings.format} onValueChange={(value) => handleSettingChange("format", value)}>
+                  <Select disabled={loading} defaultValue={settings.format} onValueChange={(value) => handleSettingChange("format", value)}>
                     <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
@@ -188,58 +226,6 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Font color</Label>
-                  <ColorPicker defaultColor={settings.subtitleColor} onChange={handleSubtitleColorChange} />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Outline color</Label>
-                  <ColorPicker defaultColor={settings.subtitleOutlineColor} onChange={handleSubtiteOutlineColorChange} />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Shadow color</Label>
-                  <ColorPicker defaultColor={settings.subtitleShadowColor} onChange={handleSubtitleShadowColorChange} />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Subtitle outline thickness</Label>
-                  <Select
-                    defaultValue={settings.subtitleOutlineThickness}
-                    onValueChange={(value) => handleSettingChange("subtitleOutlineThickness", value)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="0">None</SelectItem>
-                        <SelectItem value="1">Soft</SelectItem>
-                        <SelectItem value="2">Medium</SelectItem>
-                        <SelectItem value="3">Hard</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Subtitle shadow</Label>
-                  <Select defaultValue={settings.subtitleShadow} onValueChange={(value) => handleSettingChange("subtitleShadow", value)}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="0">None</SelectItem>
-                        <SelectItem value="1">Soft</SelectItem>
-                        <SelectItem value="2">Medium</SelectItem>
-                        <SelectItem value="3">Hard</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
                   <div className="flex items-center justify-between mb-2.5">
                     <Label htmlFor="fontSize">Font size</Label>
                     <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
@@ -247,6 +233,7 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                     </span>
                   </div>
                   <Slider
+                    disabled={loading}
                     id="fontSize"
                     defaultValue={[Number(settings.subtitleSize)]}
                     min={0}
@@ -266,6 +253,7 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                   </div>
                   <Slider
                     id="split"
+                    disabled={loading}
                     defaultValue={[Number(settings.split)]}
                     min={1}
                     max={50}
@@ -274,35 +262,75 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                     onValueChange={(value) => handleSettingChange("split", value[0])}
                   />
                 </div>
-              </div>
 
-              <div className="flex items-center space-x-4">
-                <Checkbox
-                  id="bold"
-                  defaultChecked={settings.subtitleBold == "1"}
-                  onCheckedChange={(value) => handleSettingChange("subtitleBold", value ? "1" : "0")}
-                />
-                <Label htmlFor="bold">Bold</Label>
+                <div className="space-y-2">
+                  <Label>Font color</Label>
+                  <ColorPicker disabled={loading} defaultColor={settings.subtitleColor} onChange={handleSubtitleColorChange} />
+                </div>
 
-                <Checkbox
-                  id="italic"
-                  defaultChecked={settings.subtitleItalic == "1"}
-                  onCheckedChange={(value) => handleSettingChange("subtitleItalic", value ? "1" : "0")}
-                />
-                <Label htmlFor="italic">Italic</Label>
+                <div className="space-y-2">
+                  <Label>Outline color</Label>
+                  <ColorPicker disabled={loading} defaultColor={settings.subtitleOutlineColor} onChange={handleSubtiteOutlineColorChange} />
+                </div>
 
-                <Checkbox
-                  id="underline"
-                  defaultChecked={settings.subtitleUnderline == "1"}
-                  onCheckedChange={(value) => handleSettingChange("subtitleUnderline", value ? "1" : "0")}
-                />
-                <Label htmlFor="underline">Underline</Label>
+                <div className="space-y-2">
+                  <Label>Shadow color</Label>
+                  <ColorPicker disabled={loading} defaultColor={settings.subtitleShadowColor} onChange={handleSubtitleShadowColorChange} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Subtitle outline thickness</Label>
+                  <Select
+                    disabled={loading}
+                    defaultValue={settings.subtitleOutlineThickness}
+                    onValueChange={(value) => handleSettingChange("subtitleOutlineThickness", value)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="0">None</SelectItem>
+                        <SelectItem value="1">Soft</SelectItem>
+                        <SelectItem value="2">Medium</SelectItem>
+                        <SelectItem value="3">Hard</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Subtitle shadow</Label>
+                  <Select
+                    disabled={loading}
+                    defaultValue={settings.subtitleShadow}
+                    onValueChange={(value) => handleSettingChange("subtitleShadow", value)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="0">None</SelectItem>
+                        <SelectItem value="1">Soft</SelectItem>
+                        <SelectItem value="2">Medium</SelectItem>
+                        <SelectItem value="3">Hard</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
 
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <Button onClick={() => onClose()} disabled={loading}>
+              Cancel
+            </Button>
+            <Button type="submit" variant={"secondary"} disabled={loading} onClick={handleOnSubmit}>
+              Confirm
+              {loading && <Loader className="animate-spin w-12 h-12" />}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -63,7 +63,7 @@ export function SubtitlePreview({ settings, thumbnail }: SubtitlePreviewProps) {
 
   return (
     <div className="flex justify-center items-center w-full">
-      <div className="relative h-full aspect-video rounded-lg overflow-hidden bg-gray-900">
+      <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-900">
         <img src={thumbnail} alt="Aperçu" className="w-full h-full object-cover" />
         <div
           className="absolute bottom-8 left-0 right-0 text-center px-4"

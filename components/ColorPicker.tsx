@@ -7,10 +7,11 @@ import { useState } from "react";
 
 interface ColorPickerProps {
   defaultColor?: string;
+  disabled?: boolean;
   onChange?: (color: string) => void;
 }
 
-export function ColorPicker({ defaultColor = "#FFFFFF", onChange }: ColorPickerProps) {
+export function ColorPicker({ defaultColor = "#FFFFFF", disabled = false, onChange }: ColorPickerProps) {
   const [color, setColor] = useState(defaultColor);
 
   const handleColorChange = (newColor: string) => {
@@ -18,10 +19,10 @@ export function ColorPicker({ defaultColor = "#FFFFFF", onChange }: ColorPickerP
     onChange?.(newColor);
   };
 
-  return <Picker color={color} setColor={handleColorChange} />;
+  return <Picker color={color} setColor={handleColorChange} disabled={disabled} />;
 }
 
-function Picker({ color, setColor }: { color: string; setColor: (color: string) => void }) {
+function Picker({ color, setColor, disabled }: { color: string; setColor: (color: string) => void; disabled: boolean }) {
   const solids = [
     "#E2E2E2",
     "#FF75C3",
@@ -94,7 +95,7 @@ function Picker({ color, setColor }: { color: string; setColor: (color: string) 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant={"outline"} className="w-full">
+        <Button variant={"outline"} className="w-full" disabled={disabled}>
           {color ? <div className="h-4 w-4 rounded !bg-center !bg-cover border transition-all" style={{ background: color }}></div> : <></>}
           <div className="truncate flex-1 text-left">{color}</div>
         </Button>
