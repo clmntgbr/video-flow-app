@@ -76,7 +76,7 @@ export const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(({ onUpload
       onDrop={handleDrop}
       onClick={handleZoneClick}
     >
-      <Upload className="absolute inset-0 m-auto w-100 h-100 transition-colors text-gray-300 group-hover:text-blue-100" strokeWidth={0.5} />
+      <Upload className="absolute inset-0 m-auto w-100 h-100 transition-colors text-gray-300 group-hover:text-gray-400" strokeWidth={0.5} />
       <div className="flex flex-col items-center">
         <div className="text-gray-400 text-center">
           <input ref={inputRef} id="image-upload" type="file" accept="video/*" multiple={false} className="hidden" onChange={handleFileChange} />

@@ -1,11 +1,10 @@
 "use client";
 import { useApiClient } from "@/store/context/ApiContext";
 import useConfigurationContext from "@/store/context/configurations/hooks";
-import { getConfiguration } from "@/store/context/dispatch/configurations/getConfiguration";
-import { getMediaPods } from "@/store/context/dispatch/media-pods/getMediaPods";
 import useMediaPodContext from "@/store/context/media-pods/hooks";
 import { Configuration } from "@/store/interface/configuration";
 import { MouseEvent, useEffect, useRef, useState } from "react";
+import { ColorPicker } from "./ColorPicker";
 import { SubtitlePreview } from "./SubtitlePreview";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
@@ -26,16 +25,17 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const processedVideoRef = useRef<File | null>(null);
-  const { configuration, configurationDispatch } = useConfigurationContext();
   const { mediaPodDispatch } = useMediaPodContext();
+  const { configuration, configurationDispatch } = useConfigurationContext();
   const [settings, setSettings] = useState<Configuration>(configuration.configuration);
+
   const apiClient = useApiClient();
 
   useEffect(() => {
-    setSettings(configuration.configuration);
-  }, [configuration.configuration]);
-
-  console.log(configuration.configuration);
+    if (!configuration.loading) {
+      setSettings(configuration.configuration);
+    }
+  }, [configuration.loading, configuration.configuration]);
 
   useEffect(() => {
     if (video && video !== processedVideoRef.current) {
@@ -77,6 +77,18 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
     }
   };
 
+  const handleSubtitleColorChange = (value: string) => {
+    handleSettingChange("subtitleColor", value);
+  };
+
+  const handleSubtiteOutlineColorChange = (value: string) => {
+    handleSettingChange("subtitleOutlineColor", value);
+  };
+
+  const handleSubtitleShadowColorChange = (value: string) => {
+    handleSettingChange("subtitleShadowColor", value);
+  };
+
   const handleTimeUpdate = () => {
     if (videoRef.current && !thumbnail) {
       captureFrame();
@@ -116,11 +128,11 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
     formData.append("split", settings.split);
     formData.append("format", settings.format);
 
-    apiClient?.postUploadVideo(formData).then(() => {
-      getMediaPods(mediaPodDispatch, apiClient);
-      getConfiguration(configurationDispatch, apiClient);
-      onClose();
-    });
+    // apiClient?.postUploadVideo(formData).then(() => {
+    //   getMediaPods(mediaPodDispatch, apiClient);
+    //   getConfiguration(configurationDispatch, apiClient);
+    //   onClose();
+    // });
   };
 
   return (
@@ -173,6 +185,21 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                         </SelectGroup>
                       </SelectContent>
                     </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Font color</Label>
+                    <ColorPicker defaultColor={settings.subtitleColor} onChange={handleSubtitleColorChange} />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Shadow color</Label>
+                    <ColorPicker defaultColor={settings.subtitleShadowColor} onChange={handleSubtitleShadowColorChange} />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Outline color</Label>
+                    <ColorPicker defaultColor={settings.subtitleOutlineColor} onChange={handleSubtiteOutlineColorChange} />
                   </div>
 
                   <div className="space-y-2">
@@ -282,44 +309,6 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
                         Underline
                       </label>
                     </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Couleur du texte</label>
-                      <input
-                        type="color"
-                        value={settings.subtitleColor}
-                        onChange={(e) => handleSettingChange("subtitleColor", e.target.value)}
-                        className="w-full h-10 rounded-lg cursor-pointer"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Couleur du contour</label>
-                      <input
-                        type="color"
-                        value={settings.subtitleOutlineColor}
-                        onChange={(e) => handleSettingChange("subtitleOutlineColor", e.target.value)}
-                        className="w-full h-10 rounded-lg cursor-pointer"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    {settings.subtitleShadow !== "SHADOW_NONE" && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Couleur de l'ombre</label>
-                        <input
-                          type="color"
-                          value={settings.subtitleShadowColor}
-                          onChange={(e) => handleSettingChange("subtitleShadowColor", e.target.value)}
-                          className="w-full h-10 rounded-lg cursor-pointer"
-                        />
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>

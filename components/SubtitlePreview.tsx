@@ -9,6 +9,8 @@ interface SubtitlePreviewProps {
 export function SubtitlePreview({ settings, thumbnail }: SubtitlePreviewProps) {
   const { configuration } = useConfigurationContext();
 
+  console.log(settings);
+
   const getFontSize = () => {
     switch (settings.subtitleSize) {
       case "small":
@@ -48,7 +50,7 @@ export function SubtitlePreview({ settings, thumbnail }: SubtitlePreviewProps) {
   };
 
   const getOutline = () => {
-    if (settings.subtitleOutlineThickness === "0") return "none";
+    if (settings.subtitleOutlineThickness === "0") return `0px ${settings.subtitleOutlineColor}`;
     const thickness =
       {
         "1": "1px",
@@ -65,7 +67,7 @@ export function SubtitlePreview({ settings, thumbnail }: SubtitlePreviewProps) {
       <div
         className="absolute bottom-8 left-0 right-0 text-center px-4"
         style={{
-          fontFamily: settings.subtitleFont,
+          fontFamily: getFontFamily(),
           fontSize: settings.subtitleSize + "px",
           color: settings.subtitleColor,
           fontWeight: settings.subtitleBold === "1" ? "bold" : "normal",
