@@ -147,7 +147,7 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
   return (
     <>
       <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()} modal={true}>
-        <DialogContent className="sm:max-w-[1200px] min-h-[600px]">
+        <DialogContent className="sm:max-w-[1200px] min-h-[500px]">
           <DialogHeader>
             <DialogTitle>Edit your video</DialogTitle>
             <DialogDescription>Make changes to your video here.</DialogDescription>
@@ -161,7 +161,7 @@ export default function VideoConfiguration({ isOpen = false, onClose, video }: V
               {thumbnail && <SubtitlePreview settings={settings} thumbnail={thumbnail} />}
             </div>
 
-            <div className="w-2/5 space-y-6 overflow-y-auto max-h-[calc(60vh-8rem)] px-4 py-2">
+            <div className="w-2/5 space-y-6 overflow-y-auto px-4 py-2">
               <div className="flex items-center space-x-4">
                 <Checkbox
                   id="bold"
